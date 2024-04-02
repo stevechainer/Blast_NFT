@@ -6,7 +6,7 @@ const LockModule = buildModule("LockModule", (m) => {
   // const lockedAmount = m.getParameter("lockedAmount", ONE_GWEI);
 
   const lock = m.contract("Lock", [], {
-    // value: lockedAmount,
+    id:'s'
   });
 
   return { lock };

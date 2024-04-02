@@ -3,6 +3,7 @@
   "scripts": {
     "deploy:test": "npx hardhat ignition deploy ignition/modules/Lock.ts --network blast-sepolia",
     "deploy:main": "npx hardhat ignition deploy ignition/modules/Lock.ts --network blast-mainnet",
+
     "compile": "hardhat compile"
   },
   "devDependencies": {
