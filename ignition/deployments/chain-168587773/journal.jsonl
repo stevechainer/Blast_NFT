@@ -1,0 +1,4 @@
+
+{"chainId":168587773,"type":"DEPLOYMENT_INITIALIZE"}
+{"artifactId":"LockModule#Lock","constructorArgs":[],"contractName":"Lock","dependencies":[],"from":"0x05dfb4a08b557de097b0c9bc9150496d992fcdee","futureId":"LockModule#Lock","futureType":"NAMED_ARTIFACT_CONTRACT_DEPLOYMENT","libraries":{},"strategy":"basic","strategyConfig":{},"type":"DEPLOYMENT_EXECUTION_STATE_INITIALIZE","value":{"_kind":"bigint","value":"1000000000"}}
+{"futureId":"LockModule#Lock","networkInteraction":{"data":"0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220b59de4d47e93b5e76c197e29327ec223166881c2df9ed442386e840d0bf6b86064736f6c63430008180033","id":1,"type":"ONCHAIN_INTERACTION","value":{"_kind":"bigint","value":"1000000000"}},"type":"NETWORK_INTERACTION_REQUEST"}

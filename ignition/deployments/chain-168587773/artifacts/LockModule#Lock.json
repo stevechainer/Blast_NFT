@@ -1,0 +1,16 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Lock",
+  "sourceName": "contracts/Lock.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220b59de4d47e93b5e76c197e29327ec223166881c2df9ed442386e840d0bf6b86064736f6c63430008180033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220b59de4d47e93b5e76c197e29327ec223166881c2df9ed442386e840d0bf6b86064736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

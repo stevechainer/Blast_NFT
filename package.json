@@ -1,0 +1,18 @@
+{
+  "name": "hardhat-project",
+  "scripts": {
+    "deploy:test": "npx hardhat ignition deploy ignition/modules/Lock.ts --network blast-sepolia",
+    "deploy:main": "npx hardhat ignition deploy ignition/modules/Lock.ts --network blast-mainnet",
+    "compile": "hardhat compile"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.2"
+  },
+  "dependencies": {
+    "@nomicfoundation/hardhat-ignition": "^0.15.0",
+    "@openzeppelin/contracts": "3.4.0",
+    "ethers": "^5.7",
+    "modules": "link:@nomicfoundation/hardhat-ignition/modules"
+  }
+}
