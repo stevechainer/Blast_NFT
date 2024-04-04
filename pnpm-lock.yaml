@@ -9,8 +9,8 @@ dependencies:
     specifier: ^0.15.0
     version: 0.15.0(@nomicfoundation/hardhat-verify@2.0.5)(hardhat@2.22.2)
   '@openzeppelin/contracts':
-    specifier: 3.4.0
-    version: 3.4.0
+    specifier: 5.0.2
+    version: 5.0.2
   ethers:
     specifier: ^5.7
     version: 5.7.2
@@ -794,8 +794,8 @@ packages:
       '@nomicfoundation/solidity-analyzer-win32-ia32-msvc': 0.1.1
       '@nomicfoundation/solidity-analyzer-win32-x64-msvc': 0.1.1
 
-  /@openzeppelin/contracts@3.4.0:
-    resolution: {integrity: sha512-qh+EiHWzfY/9CORr+eRUkeEUP1WiFUcq3974bLHwyYzLBUtK6HPaMkIUHi74S1rDTZ0sNz42DwPc5A4IJvN3rg==}
+  /@openzeppelin/contracts@5.0.2:
+    resolution: {integrity: sha512-ytPc6eLGcHHnapAZ9S+5qsdomhjo6QBHTDRRBFfTxXIpsicMhVPouPgmUPebZZZGX7vt9USA+Z+0M0dSVtSUEA==}
     dev: false
 
   /@scure/base@1.1.6:
