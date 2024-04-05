@@ -1,8 +1,9 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "deploy:test": "npx hardhat ignition deploy ignition/modules/Lock.ts --network blast-sepolia",
-    "deploy:main": "npx hardhat ignition deploy ignition/modules/Lock.ts --network blast-mainnet",
+    "app": "npx hardhat run script/app.ts",
+    "deploy:test": "npx hardhat ignition deploy --reset ignition/modules/Lock.ts --network blast-sepolia",
+    "deploy:main": "npx hardhat ignition deploy  ignition/modules/Lock.ts --network blast-mainnet",
     "compile": "hardhat compile"
   },
   "devDependencies": {
@@ -11,8 +12,12 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-ignition": "^0.15.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@openzeppelin/contracts": "5.0.2",
-    "ethers": "^5.7",
+    "@types/inquirer": "^9.0.7",
+    "ethers": "6.x",
+    "inquirer": "^8.2.6",
+    "inquirer-autocomplete-standalone": "^0.8.1",
     "modules": "link:@nomicfoundation/hardhat-ignition/modules"
   }
 }

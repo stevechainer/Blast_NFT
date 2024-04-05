@@ -4,8 +4,10 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+
 interface IBlast {
     function configureClaimableGas() external;
+
     function claimAllGas(
         address contractAddress,
         address recipient
@@ -19,6 +21,7 @@ contract Lock is ERC721, Ownable {
     uint256 private _tokenIds;
     IBlast public blastContract;
     string private _baseTokenURI;
+    uint256 public constant MINT_PRICE = 0.5 ether;
 
     constructor() ERC721("MyERC721Token", "MET") Ownable(msg.sender) {
         // 初始化Blast合约的地址
@@ -67,20 +70,27 @@ contract Lock is ERC721, Ownable {
         return addresses; // 返回地址数组
     }
 
-    // 空投函数，要求接收者地址在白名单中
-    function airdrop(address to) external onlyOwner {
-        require(isWhitelisted(to), "Address is not whitelisted");
-        _tokenIds += 1;
-        _mint(to, _tokenIds);
-    }
-
     // 批量空投
     function batchAirdrop(address[] calldata addresses) external onlyOwner {
         for (uint256 i = 0; i < addresses.length; i++) {
-            require(isWhitelisted(addresses[i]), "Address is not whitelisted");
             _tokenIds += 1;
             _mint(addresses[i], _tokenIds);
         }
+    }
+
+    // 允许用户以0.5 ETH的价格铸造NFT
+    function mint() public payable {
+        require(msg.value == MINT_PRICE, "Incorrect value sent");
+
+        _tokenIds += 1;
+        _mint(msg.sender, _tokenIds);
+    }
+
+    // 允许合约所有者提取合约中的ETH
+    function withdraw() external onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds available");
+        payable(owner()).transfer(balance);
     }
 
     // 管理员认领Gas费用
