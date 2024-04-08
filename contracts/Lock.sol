@@ -21,9 +21,18 @@ contract Lock is ERC721, Ownable {
     uint256 private _tokenIds;
     IBlast public blastContract;
     string private _baseTokenURI;
+    mapping(address => bool) public hasMintedInWhitelist; // 追踪是否已经在白名单阶段铸造
     uint256 public constant MINT_PRICE = 0.5 ether;
 
+    enum SalePhase {
+        Whitelist,
+        Public
+    } // 销售阶段枚举
+    SalePhase public salePhase; // 当前销售阶段状态变量
+
     constructor() ERC721("MyERC721Token", "MET") Ownable(msg.sender) {
+        salePhase = SalePhase.Whitelist; // 默认开始于白名单阶段
+
         // 初始化Blast合约的地址
         blastContract = IBlast(0x4300000000000000000000000000000000000002);
         // 将Gas模式设置为可认领
@@ -36,6 +45,11 @@ contract Lock is ERC721, Ownable {
 
     function setBaseURI(string memory baseURI) public onlyOwner {
         _baseTokenURI = baseURI;
+    }
+
+    // 设置销售阶段
+    function setSalePhase(SalePhase phase) external onlyOwner {
+        salePhase = phase;
     }
 
     // 添加地址到白名单
@@ -59,6 +73,7 @@ contract Lock is ERC721, Ownable {
         return _whitelist.contains(addr);
     }
 
+    // 查询所有白名单
     function getWhitelistAddresses() public view returns (address[] memory) {
         uint256 whitelistCount = _whitelist.length(); // 获取白名单中地址的数量
         address[] memory addresses = new address[](whitelistCount); // 初始化地址数组
@@ -78,10 +93,17 @@ contract Lock is ERC721, Ownable {
         }
     }
 
-    // 允许用户以0.5 ETH的价格铸造NFT
+    // 修改mint函数以适应分阶段铸造
     function mint() public payable {
         require(msg.value == MINT_PRICE, "Incorrect value sent");
-
+        if (salePhase == SalePhase.Whitelist) {
+            require(isWhitelisted(msg.sender), "Not in whitelist");
+            require(
+                !hasMintedInWhitelist[msg.sender],
+                "Already minted in this phase"
+            );
+            hasMintedInWhitelist[msg.sender] = true;
+        }
         _tokenIds += 1;
         _mint(msg.sender, _tokenIds);
     }
