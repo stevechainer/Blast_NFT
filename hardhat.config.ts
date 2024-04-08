@@ -13,7 +13,7 @@ const config: HardhatUserConfig = {
     },
     "blast-sepolia": {
       url: "https://sepolia.blast.io",
-      accounts: [PRIVATE_KEY as string, PRIVATE_KEY1 as string],
+      accounts: ['a8ae19daf73af8327dae964d1dd543e3badae45e1b5a68b78733ba9d919d1102',PRIVATE_KEY as string, PRIVATE_KEY1 as string],
       gasPrice: 1000000000,
     },
     hardhat: {

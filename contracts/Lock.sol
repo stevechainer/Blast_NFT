@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
@@ -14,15 +14,16 @@ interface IBlast {
     ) external returns (uint256);
 }
 
-contract Lock is ERC721, Ownable {
+contract Lock is ERC721, Ownable, AccessControl {
     using EnumerableSet for EnumerableSet.AddressSet;
+    bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
 
     EnumerableSet.AddressSet private _whitelist;
     uint256 private _tokenIds;
     IBlast public blastContract;
     string private _baseTokenURI;
     mapping(address => bool) public hasMintedInWhitelist; // 追踪是否已经在白名单阶段铸造
-    uint256 public constant MINT_PRICE = 0.5 ether;
+    uint256 public constant MINT_PRICE = 0.001 ether; //mint 价格
 
     enum SalePhase {
         Whitelist,
@@ -37,32 +38,59 @@ contract Lock is ERC721, Ownable {
         blastContract = IBlast(0x4300000000000000000000000000000000000002);
         // 将Gas模式设置为可认领
         blastContract.configureClaimableGas();
+
+        setupRole(DEFAULT_ADMIN_ROLE, msg.sender); // 给部署者管理员角色
+        setupRole(OPERATOR_ROLE, msg.sender); // 同时给部署者运营角色
+    }
+
+    function setupRole(bytes32 role, address account) public onlyOwner {
+        _grantRole(role, account);
+    }
+
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC721, AccessControl) returns (bool) {
+        return super.supportsInterface(interfaceId);
     }
 
     function _baseURI() internal view override returns (string memory) {
         return _baseTokenURI;
     }
 
-    function setBaseURI(string memory baseURI) public onlyOwner {
+    function setBaseURI(string memory baseURI) public {
+        require(
+            hasRole(OPERATOR_ROLE, msg.sender) || owner() == msg.sender,
+            "Must have operator role or be owner"
+        );
         _baseTokenURI = baseURI;
     }
 
     // 设置销售阶段
-    function setSalePhase(SalePhase phase) external onlyOwner {
+    function setSalePhase(SalePhase phase) external {
+        require(
+            hasRole(OPERATOR_ROLE, msg.sender) || owner() == msg.sender,
+            "Must have operator role or be owner"
+        );
         salePhase = phase;
     }
 
     // 添加地址到白名单
-    function addToWhitelist(address[] calldata addresses) external onlyOwner {
+    function addToWhitelist(address[] calldata addresses) external {
+        require(
+            hasRole(OPERATOR_ROLE, msg.sender) || owner() == msg.sender,
+            "Must have operator role or be owner"
+        );
         for (uint256 i = 0; i < addresses.length; i++) {
             _whitelist.add(addresses[i]);
         }
     }
 
     // 从白名单移除地址
-    function removeFromWhitelist(
-        address[] calldata addresses
-    ) external onlyOwner {
+    function removeFromWhitelist(address[] calldata addresses) external {
+        require(
+            hasRole(OPERATOR_ROLE, msg.sender) || owner() == msg.sender,
+            "Must have operator role or be owner"
+        );
         for (uint256 i = 0; i < addresses.length; i++) {
             _whitelist.remove(addresses[i]);
         }

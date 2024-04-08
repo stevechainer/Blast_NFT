@@ -7,7 +7,7 @@ let lock: any;
 let owner: { provider: any; address: string };
 let addr1: { provider: any; address: string };
 
-const MINT_PRICE = 0.5  ;
+const MINT_PRICE = 0.001  ;
 
 before(async function () {
   // 部署合约
