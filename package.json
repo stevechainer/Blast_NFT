@@ -4,15 +4,16 @@
     "app": "npx hardhat run script/app.ts",
     "deploy:test": "npx hardhat ignition deploy --reset ignition/modules/Lock.ts --network blast-sepolia",
     "deploy:main": "npx hardhat ignition deploy  ignition/modules/Lock.ts --network blast-mainnet",
-    "compile": "hardhat compile"
+    "compile": "hardhat compile",
+    "test":"npx hardhat test --network blast-sepolia"
   },
   "devDependencies": {
     "hardhat": "^2.22.2"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@nomicfoundation/hardhat-ignition": "^0.15.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "5.0.2",
     "@types/inquirer": "^9.0.7",
     "ethers": "6.x",

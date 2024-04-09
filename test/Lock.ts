@@ -7,17 +7,17 @@ let lock: any;
 let owner: { provider: any; address: string };
 let addr1: { provider: any; address: string };
 
-const MINT_PRICE = 0.001  ;
+const MINT_PRICE = "0.001"  ;
 
 before(async function () {
-  // 部署合约
-  // lock = await hre.ethers.deployContract("Lock", [], {});
+  // 重新部署合约
+  lock = await hre.ethers.deployContract("Lock", [], {});
   [owner, addr1] = await ethers.getSigners();
   // 使用已部署的合约
-  lock = await hre.ethers.getContractAt(
-    artifacts.abi,
-    deployed_addresses["LockModule#v_2"]
-  );
+  // lock = await hre.ethers.getContractAt(
+  //   artifacts.abi,
+  //   deployed_addresses["LockModule#v_2"]
+  // );
 });
 
 // describe("Base_Test", function () {
@@ -37,7 +37,7 @@ before(async function () {
 // });
 
 describe("Mint functionality in Whitelist phase", async function () {
-  it("Whitelist phase: should mint a new token for 0.5 ETH", async function () {
+  it(`Whitelist phase: should mint a new token for ${MINT_PRICE} ETH`, async function () {
     // 假设addToWhitelist是添加地址到白名单的函数
     await lock.addToWhitelist([owner.address]);
 
