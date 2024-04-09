@@ -2,10 +2,10 @@
   "name": "hardhat-project",
   "scripts": {
     "app": "npx hardhat run script/app.ts",
-    "deploy:test": "npx hardhat ignition deploy --reset ignition/modules/Lock.ts --network blast-sepolia",
-    "deploy:main": "npx hardhat ignition deploy  ignition/modules/Lock.ts --network blast-mainnet",
+    "deploy:test": "npx hardhat ignition deploy --reset ignition/modules/ERC721NFT.ts --network blast-sepolia",
+    "deploy:main": "npx hardhat ignition deploy  ignition/modules/ERC721NFT.ts --network blast-mainnet",
     "compile": "hardhat compile",
-    "test":"npx hardhat test --network blast-sepolia"
+    "test": "npx hardhat test --network blast-sepolia"
   },
   "devDependencies": {
     "hardhat": "^2.22.2"
@@ -16,6 +16,7 @@
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "5.0.2",
     "@types/inquirer": "^9.0.7",
+    "chai": "4.x",
     "ethers": "6.x",
     "inquirer": "^8.2.6",
     "inquirer-autocomplete-standalone": "^0.8.1",

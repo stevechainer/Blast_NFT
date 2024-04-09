@@ -20,6 +20,9 @@ dependencies:
   '@types/inquirer':
     specifier: ^9.0.7
     version: 9.0.7
+  chai:
+    specifier: 4.x
+    version: 4.4.1
   ethers:
     specifier: 6.x
     version: 6.11.1
