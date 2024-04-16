@@ -4,15 +4,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-
-interface IBlast {
-    function configureClaimableGas() external;
-
-    function claimAllGas(
-        address contractAddress,
-        address recipient
-    ) external returns (uint256);
-}
+import "./Blast.sol";
 
 contract ERC721NFT is ERC721, Ownable, AccessControl {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -31,7 +23,7 @@ contract ERC721NFT is ERC721, Ownable, AccessControl {
     } // 销售阶段枚举
     SalePhase public salePhase; // 当前销售阶段状态变量
 
-    constructor() ERC721("MyERC721Token", "MET") Ownable(msg.sender) {
+    constructor() ERC721("ChatyN ZHOU", "ZHOU") Ownable(msg.sender) {
         salePhase = SalePhase.Whitelist; // 默认开始于白名单阶段
 
         // 初始化Blast合约的地址
@@ -148,4 +140,5 @@ contract ERC721NFT is ERC721, Ownable, AccessControl {
         // 认领所有累积的Gas费用到指定的接收者
         blastContract.claimAllGas(address(this), recipient);
     }
+
 }

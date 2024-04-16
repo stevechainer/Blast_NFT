@@ -1,8 +1,8 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 const { vars } = require("hardhat/config");
-const PRIVATE_KEY = vars.get("KEY");
-const PRIVATE_KEY1 = vars.get("KEY1");
+const PRIVATE_KEY = vars.get("KEY"); //main
+const PRIVATE_KEY1 = vars.get("KEY1"); //t1
 const Blast_sepolia_test_key = vars.get("Blast_sepolia_test_key");
 const config: HardhatUserConfig = {
   solidity: "0.8.24",

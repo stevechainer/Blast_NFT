@@ -6,20 +6,28 @@ let lock: any;
 
 let owner: { provider: any; address: string };
 let addr1: { provider: any; address: string };
+let addr2: { provider: any; address: string };
 
-const MINT_PRICE = "0.00002"  ;
+const MINT_PRICE = "0.00002";
 
 before(async function () {
   // 重新部署合约
   lock = await hre.ethers.deployContract("ERC721NFT", [], {});
-  [owner, addr1] = await ethers.getSigners();
+
   // 使用已部署的合约
   // lock = await hre.ethers.getContractAt(
   //   artifacts.abi,
   //   deployed_addresses["ERC721NFTModule#v_2"]
   // );
-});
 
+  // 测试账号
+  [owner, addr1, addr2] = await ethers.getSigners();
+});
+after(async function name() {
+  let data=await lock.readGasInfo()
+  console.log(data)
+
+});
 describe("Base_Test", function () {
   it("Check name", async function () {
     expect(await lock.name()).to.equal("MyERC721Token");
@@ -107,40 +115,6 @@ describe("batchAirdrop functionality", function () {
   });
 });
 
-describe("Withdraw", function () {
-  it("should allow the owner to withdraw funds", async function () {
-    // First, mint a new token to ensure there are funds in the contract
-    await lock.connect(owner).mint({ value: ethers.parseEther(MINT_PRICE) });
-
-    const initialOwnerBalance = await ethers.provider.getBalance(owner.address);
-
-    const tx = await lock.connect(owner).withdraw();
-    const receipt = await tx.wait();
-    const transactionFee = receipt.gasUsed * receipt.gasPrice; // 使用`gasUsed`和`gasPrice`来计算交易费
-
-    const finalOwnerBalance = await ethers.provider.getBalance(owner.address);
-
-    //  检查最终余额是否正确（初始余额 + 0.5 ETH - 提现调用的交易费）
-    expect(finalOwnerBalance.toString().substring(0, 3)).to.equal(
-      (initialOwnerBalance + ethers.parseEther(MINT_PRICE) - transactionFee)
-        .toString()
-        .substring(0, 3)
-    );
-
-    console.log(1, finalOwnerBalance.toString().substring(0, 3));
-    console.log(
-      2,
-      (initialOwnerBalance + ethers.parseEther(MINT_PRICE) - transactionFee)
-        .toString()
-        .substring(0, 3)
-    );
-  });
-
-  it("should fail if a non-owner tries to withdraw funds", async function () {
-    await expect(lock.connect(addr1).withdraw()).to.be.reverted;
-  });
-});
-
 describe("Base URI Management", function () {
   it("setBaseURI ", async function () {
     await lock.setBaseURI("baidu.com/");
@@ -150,5 +124,63 @@ describe("Base URI Management", function () {
 
   it("non-owner setBaseURI", async function name() {
     await expect(lock.connect(addr1).setBaseURI("baidu.com/")).to.be.reverted;
+  });
+});
+
+describe("Role management", function () {
+  it("Only accounts with OPERATOR_ROLE should call restrictedFunction", async function () {
+    const [owner, addr1] = await ethers.getSigners();
+
+    let OPERATOR_ROLE = await lock.OPERATOR_ROLE();
+
+    // 尝试由没有OPERATOR_ROLE的账户调用restrictedFunction
+    await expect(
+      lock.connect(addr1).addToWhitelist([addr2.address])
+    ).to.be.revertedWith("Must have operator role or be owner");
+    expect(await lock.isWhitelisted(addr2.address)).to.equal(false);
+
+    // 给addr1授予OPERATOR_ROLE
+    await lock.connect(owner).grantRole(OPERATOR_ROLE, addr1.address);
+
+    // 再次尝试，现在应该成功
+    await expect(lock.connect(addr1).addToWhitelist([addr2.address])).not.to.be
+      .reverted;
+    expect(await lock.isWhitelisted(addr2.address)).to.equal(true);
+  });
+
+  describe("Withdraw", function () {
+    it("should allow the owner to withdraw funds", async function () {
+      // First, mint a new token to ensure there are funds in the contract
+      await lock.connect(owner).mint({ value: ethers.parseEther(MINT_PRICE) });
+
+      const initialOwnerBalance = await ethers.provider.getBalance(
+        owner.address
+      );
+
+      const tx = await lock.connect(owner).withdraw();
+      const receipt = await tx.wait();
+      const transactionFee = receipt.gasUsed * receipt.gasPrice; // 使用`gasUsed`和`gasPrice`来计算交易费
+
+      const finalOwnerBalance = await ethers.provider.getBalance(owner.address);
+
+      //  检查最终余额是否正确（初始余额 + 0.5 ETH - 提现调用的交易费）
+      expect(finalOwnerBalance.toString().substring(0, 3)).to.equal(
+        (initialOwnerBalance + ethers.parseEther(MINT_PRICE) - transactionFee)
+          .toString()
+          .substring(0, 3)
+      );
+
+      console.log(1, finalOwnerBalance.toString().substring(0, 3));
+      console.log(
+        2,
+        (initialOwnerBalance + ethers.parseEther(MINT_PRICE) - transactionFee)
+          .toString()
+          .substring(0, 3)
+      );
+    });
+
+    it("should fail if a non-owner tries to withdraw funds", async function () {
+      await expect(lock.connect(addr1).withdraw()).to.be.reverted;
+    });
   });
 });
